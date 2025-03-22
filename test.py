@@ -104,6 +104,7 @@ def get_apt_details(apt_code):
 
             for item in result['list']:
                 lands.append([
+                    item['atclNm'],
                     item['tradTpNm'],  # 거래 타입 이름
                     item['bildNm'],    # 건물 이름
                     item['flrInfo'],   # 층 정보
@@ -117,82 +118,6 @@ def get_apt_details(apt_code):
     except Exception as e:
         st.error(f"Error fetching data: {e}")
         return pd.DataFrame()
-
-            
-
-    # DataFrame 생성 시 컬럼명 지정
-    df = pd.DataFrame(lands, columns=['거래타입', '건물명', '층', '가격', '면적'])
-    
-    # CSV 파일로 저장
-    output_filename = "상암월드컵파크4단지_매물.csv"
-    df.to_csv(output_filename, index=False, encoding='utf-8-sig')
-
-
-
-# 아파트 코드로 상세 정보 가져오기
-# def get_apt_details(apt_code):
-#     details_url = f'https://fin.land.naver.com/complexes/{apt_code}?tab=complex-info'
-#     article_url = f'https://fin.land.naver.com/complexes/{apt_code}?tab=article&tradeTypes=A1'
-    
-#     header = {
-#         "Accept-Encoding": "gzip",
-#         "Host": "fin.land.naver.com",
-#         "Referer": "https://fin.land.naver.com/",
-#         "Sec-Fetch-Dest": "empty",
-#         "Sec-Fetch-Mode": "cors",
-#         "Sec-Fetch-Site": "same-origin",
-#         "User-Agent": "Mozilla/5.0"
-#     }
-    
-#     try:
-#         # 기본 정보 가져오기
-#         r_details = requests.get(details_url, headers=header)
-#         r_details.encoding = "utf-8-sig"
-#         soup_details = BeautifulSoup(r_details.content, 'html.parser')
-        
-#         apt_name_tag = soup_details.find('span', class_='ComplexSummary_name__vX3IN')
-#         apt_name = apt_name_tag.text.strip() if apt_name_tag else 'Unknown'
-#         detail_dict = {'complexNo': apt_code, 'complexName': apt_name}
-        
-#         detail_items = soup_details.find_all('li', class_='DataList_item__T1hMR')
-#         for item in detail_items:
-#             term = item.find('div', class_='DataList_term__Tks7l').text.strip()
-#             definition = item.find('div', class_='DataList_definition__d9KY1').text.strip()
-#             if term in ['공급면적', '전용면적', '해당면적 세대수', '현관구조', '방/욕실', '위치', '사용승인일', '세대수', '난방', '주차', '전기차 충전시설', '용적률/건폐율', '관리사무소 전화', '건설사']:
-#                 detail_dict[term] = definition
-
-#         # 매물 정보 가져오기
-#         r_article = requests.get(article_url, headers=header)
-#         r_article.encoding = "utf-8-sig"
-#         soup_article = BeautifulSoup(r_article.content, 'html.parser')
-        
-#         listings = []
-#         for item in soup_article.find_all('li', class_='ComplexArticleItem_item__L5o7k'):
-#             listing = {}
-#             name_tag = item.find('span', class_='ComplexArticleItem_name__4h3AA')
-#             listing['매물명'] = name_tag.text.strip() if name_tag else 'Unknown'
-#             price_tag = item.find('span', class_='ComplexArticleItem_price__DFeIb')
-#             listing['매매가'] = price_tag.text.strip() if price_tag else 'Unknown'
-            
-#             summary_items = item.find_all('li', class_='ComplexArticleItem_item-summary__oHSwl')
-#             if len(summary_items) >= 4:
-#                 listing['면적'] = summary_items[1].text.strip() if len(summary_items) > 1 else 'Unknown'
-#                 listing['층수'] = summary_items[2].text.strip() if len(summary_items) > 2 else 'Unknown'
-#                 listing['방향'] = summary_items[3].text.strip() if len(summary_items) > 3 else 'Unknown'
-            
-#             image_tag = item.find('img')
-#             listing['이미지'] = image_tag['src'] if image_tag else 'No image'
-#             comment_tag = item.find('p', class_='ComplexArticleItem_comment__zN_dK')
-#             listing['코멘트'] = comment_tag.text.strip() if comment_tag else 'No comment'
-            
-#             combined_listing = {**detail_dict, **listing}
-#             listings.append(combined_listing)
-        
-#         return listings
-    
-#     except Exception as e:
-#         st.error(f"Error fetching details for {apt_code}: {e}")
-#         return []
 
 import pdb
 # 아파트 정보를 수집하는 함수
